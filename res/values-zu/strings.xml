@@ -18,16 +18,6 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="8095131950334945205">"Isibali"</string>
     <string name="error" msgid="9197457880925804499">"Iphutha"</string>
-    <string name="digit0" msgid="8069590963464434135">"0"</string>
-    <string name="digit1" msgid="8535041374797804029">"1"</string>
-    <string name="digit2" msgid="8977354203154316247">"2"</string>
-    <string name="digit3" msgid="148544090755132760">"3"</string>
-    <string name="digit4" msgid="2199490603838247678">"4"</string>
-    <string name="digit5" msgid="7568514524384173087">"5"</string>
-    <string name="digit6" msgid="6705952561049362551">"6"</string>
-    <string name="digit7" msgid="658125644218958447">"7"</string>
-    <string name="digit8" msgid="3134686906411558886">"8"</string>
-    <string name="digit9" msgid="765379157698748031">"9"</string>
     <string name="del" msgid="6248896117422989693">"SUSA"</string>
     <string name="clear" msgid="8103610981407459768">"CLR"</string>
     <string name="sin" msgid="6793866152659175277">"sin"</string>
@@ -40,23 +30,4 @@
     <string name="advanced" msgid="7122495413742976492">"Iphaneli ethuthukisiwe"</string>
     <string name="clear_history" msgid="8458043980601165012">"Sula umlando"</string>
     <string name="text_copied_toast" msgid="5801480710472541833">"Umbhalo okopishiwe."</string>
-  <string-array name="operatorDescs">
-    <item msgid="7903565108986789641">"ama-parenthesis esobunxele"</item>
-    <item msgid="1688156211934459752">"I-parenthesis yesokudla"</item>
-    <item msgid="6664829080840305856">"ngokwesimo"</item>
-    <item msgid="2880199289575144121">"i-logarithm yemvelo"</item>
-    <item msgid="4398774906998694599">"i-logarithm"</item>
-    <item msgid="1791869359785943266">"Impande yesikwele"</item>
-    <item msgid="6833720171974254459">"ihlukaniswe nge"</item>
-    <item msgid="2646574635189709515">"kuphindaphindwa ngo"</item>
-    <item msgid="3487936384379753697">"kuhlanganise"</item>
-    <item msgid="8608534484562258856">"susa"</item>
-    <item msgid="3456824579675198186">" iphoyinti "</item>
-    <item msgid="4528629783180278651">"Amandla"</item>
-    <item msgid="4050948027333760159">"i-tangent"</item>
-    <item msgid="8716478860618683850">"i-sine"</item>
-    <item msgid="3203211483560707480">"i-cosine"</item>
-    <item msgid="8587490959348493065">"i-Pi"</item>
-    <item msgid="8134315487552198394">"okulinganayo"</item>
-  </string-array>
 </resources>
