@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2013 The CyanogenMod Project
+<!-- Copyright (C) 2012-2013 The CyanogenMod Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="application_copyright">Copyright \u00A9 2013 The CyanogenMod Project</string>
     <string name="X">X</string>
@@ -28,6 +27,8 @@
     <string name="graph">Gráficas</string>
     <string name="function">Funciones</string>
     <string name="hexPanel">Dec/Bin/Hex</string>
+    <string name="lock">Bloquear página</string>
+    <string name="unlock">Desbloquear página</string>
     <string name="copy">\u00AB%s\u00BB copiado</string>
     <string name="remove_from_history">Borrar del historial</string>
     <string name="dx">dX</string>
@@ -59,6 +60,7 @@
     <string name="pref_units">Unidades</string>
     <string name="pref_about">Acerca de</string>
     <string name="returnToBasic">Volver a funciones básicas</string>
+    <string name="digitGrouping">Agrupar dígitos</string>
     <string name="trigUnits">Uds. trigonométricas</string>
     <string name="radians">RAD</string>
     <string name="degrees">DEG</string>
@@ -67,9 +69,9 @@
     <string name="cling_matrix_title">Matrices</string>
     <string name="cling_matrix_msg">Tocar aquí para comenzar a construir y resolver matrices.</string>
     <string name="cling_hex_title">Cambiar base</string>
-    <string name="cling_hex_msg">Cambiar entre decimal (dec), binario (bin) y hexadecimal (hex).\n\nAviso: Si usted cree que el resultado de alguna operación es incorrecto, seguramente se encuentre en una base distinta. Por defecto es decimal.</string>
+    <string name="cling_hex_msg">Cambiar entre decimal (dec), binario (bin) y hexadecimal (hex).\n\nAviso: Si consideras que el resultado de alguna operación es incorrecto, seguramente te encuentras en una base distinta. Por defecto es decimal.</string>
     <string name="cling_graph_title">Gráficas</string>
-    <string name="cling_graph_msg">Las gráficas aparecerán aquí automáticamente. Vaya a operaciones avanzadas y construya una función utilizando X e Y.</string>
+    <string name="cling_graph_msg">Las gráficas aparecerán aquí automáticamente. Construye una función utilizando X e Y dentro de la página de funciones avanzadas.</string>
     <string name="cling_dismiss">Aceptar</string>
     <string name="easter_egg">Magikarp salpicó, pero no ocurrió nada.</string>
 </resources>
