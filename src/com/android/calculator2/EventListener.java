@@ -16,29 +16,31 @@
 
 package com.android.calculator2;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.calculator2.BaseModule.Mode;
 import com.android.calculator2.Calculator.Panel;
-import com.android.calculator2.Logic.Mode;
 import com.android.calculator2.view.MatrixEditText;
 import com.android.calculator2.view.MatrixInverseView;
 import com.android.calculator2.view.MatrixTransposeView;
 import com.android.calculator2.view.MatrixView;
 
+import java.util.List;
+
 public class EventListener implements View.OnKeyListener, View.OnClickListener, View.OnLongClickListener {
     Context mContext;
     Logic mHandler;
     ViewPager mPager;
+    ViewPager mSmallPager;
+    ViewPager mLargePager;
 
     private String mErrorString;
     private String mModString;
@@ -46,13 +48,21 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
     private String mY;
     private String mDX;
     private String mDY;
-    private List<String> bannedInDecimal;
-    private List<String> bannedInBinary;
 
     void setHandler(Context context, Logic handler, ViewPager pager) {
+        setHandler(context, handler, pager, null, null);
+    }
+
+    void setHandler(Context context, Logic handler, ViewPager smallPager, ViewPager largePager) {
+        setHandler(context, handler, null, smallPager, largePager);
+    }
+
+    private void setHandler(Context context, Logic handler, ViewPager pager, ViewPager smallPager, ViewPager largePager) {
         mContext = context;
         mHandler = handler;
         mPager = pager;
+        mSmallPager = smallPager;
+        mLargePager = largePager;
 
         mErrorString = mContext.getString(R.string.error);
         mModString = mContext.getString(R.string.mod);
@@ -60,23 +70,6 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
         mY = mContext.getString(R.string.Y);
         mDX = mContext.getString(R.string.dx);
         mDY = mContext.getString(R.string.dy);
-
-        String digit2 = mContext.getString(R.string.digit2);
-        String digit3 = mContext.getString(R.string.digit3);
-        String digit4 = mContext.getString(R.string.digit4);
-        String digit5 = mContext.getString(R.string.digit5);
-        String digit6 = mContext.getString(R.string.digit6);
-        String digit7 = mContext.getString(R.string.digit7);
-        String digit8 = mContext.getString(R.string.digit8);
-        String digit9 = mContext.getString(R.string.digit9);
-        String A = mContext.getString(R.string.A);
-        String B = mContext.getString(R.string.B);
-        String C = mContext.getString(R.string.C);
-        String D = mContext.getString(R.string.D);
-        String E = mContext.getString(R.string.E);
-        String F = mContext.getString(R.string.F);
-        bannedInDecimal = Arrays.asList(A, B, C, D, E, F);
-        bannedInBinary = Arrays.asList(A, B, C, D, E, F, digit2, digit3, digit4, digit5, digit6, digit7, digit8, digit9);
     }
 
     @Override
@@ -105,24 +98,27 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
             break;
 
         case R.id.hex:
-            mHandler.setText(mHandler.setMode(Mode.HEXADECIMAL));
+            mHandler.setText(mHandler.mBaseModule.setMode(Mode.HEXADECIMAL));
             view.setBackgroundResource(R.color.pressed_color);
             ((View) view.getParent()).findViewById(R.id.bin).setBackgroundResource(R.drawable.btn_function);
             ((View) view.getParent()).findViewById(R.id.dec).setBackgroundResource(R.drawable.btn_function);
+            applyAllBannedResources(mHandler.mBaseModule, "hex");
             break;
 
         case R.id.bin:
-            mHandler.setText(mHandler.setMode(Mode.BINARY));
+            mHandler.setText(mHandler.mBaseModule.setMode(Mode.BINARY));
             view.setBackgroundResource(R.color.pressed_color);
             ((View) view.getParent()).findViewById(R.id.hex).setBackgroundResource(R.drawable.btn_function);
             ((View) view.getParent()).findViewById(R.id.dec).setBackgroundResource(R.drawable.btn_function);
+            applyAllBannedResources(mHandler.mBaseModule, "bin");
             break;
 
         case R.id.dec:
-            mHandler.setText(mHandler.setMode(Mode.DECIMAL));
+            mHandler.setText(mHandler.mBaseModule.setMode(Mode.DECIMAL));
             view.setBackgroundResource(R.color.pressed_color);
             ((View) view.getParent()).findViewById(R.id.bin).setBackgroundResource(R.drawable.btn_function);
             ((View) view.getParent()).findViewById(R.id.hex).setBackgroundResource(R.drawable.btn_function);
+            applyAllBannedResources(mHandler.mBaseModule, "dec");
             break;
 
         case R.id.matrix:
@@ -238,9 +234,6 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
             if(view instanceof Button) {
                 if(mHandler.getText().equals(mErrorString)) mHandler.setText("");
                 String text = ((Button) view).getText().toString();
-                if(!acceptableKey(text)) {
-                    break;
-                }
                 if(text.equals(mDX) || text.equals(mDY)) {
                     // Do nothing
                 }
@@ -254,11 +247,54 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
         }
     }
 
+    private void applyAllBannedResources(BaseModule base, String baseMode) {
+        for (String key : base.mBannedResources.keySet()) {
+            if (baseMode.compareTo(key) != 0) {
+                applyBannedResources(base, key, true);
+            }
+        }
+        applyBannedResources(base, baseMode, false);
+    }
+
+    private void applyBannedResources(BaseModule base, String baseMode, boolean enabled) {
+        List<Integer> resources = base.mBannedResources.get(baseMode);
+        ViewPager pager = mPager != null ? mPager : mSmallPager;
+        for (Integer resource : resources) {
+            final int resId = resource.intValue();
+            // There are multiple views with the same id, but the is unique per page
+            // Find ids on every page
+            int count = pager.getChildCount();
+            boolean found = false;
+            for (int i = 0; i <= count; i++) {
+                View child = pager.getChildAt(i);
+                if (child instanceof ViewGroup) {
+                    View v = ((ViewGroup)child).findViewById(resId);
+                    if (v != null) {
+                        v.setEnabled(enabled);
+                        found = true;
+                    }
+                }
+            }
+            // An especial check when current pager is mLargePager
+            if (!found && mPager == null && mLargePager != null) {
+                for (int i = 0; i <= count; i++) {
+                    View child = mLargePager.getChildAt(i);
+                    if (child instanceof ViewGroup) {
+                        View v = ((ViewGroup)child).findViewById(resId);
+                        v.setEnabled(enabled);
+                        found = true;
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public boolean onLongClick(View view) {
         switch(view.getId()) {
         case R.id.del:
             mHandler.onClear();
+            return true;
         }
         if(view.getTag() != null) {
             String text = (String) view.getTag();
@@ -269,15 +305,13 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
         }
         if(view instanceof TextView && ((TextView) view).getHint() != null) {
             String text = ((TextView) view).getHint().toString();
-            if(acceptableKey(text)) {
-                if(text.length() >= 2) {
-                    // Add paren after sin, cos, ln, etc. from buttons
-                    text += "(";
-                }
-                mHandler.insert(text);
-                returnToBasic();
-                return true;
+            if(text.length() >= 2) {
+                // Add paren after sin, cos, ln, etc. from buttons
+                text += "(";
             }
+            mHandler.insert(text);
+            returnToBasic();
+            return true;
         }
         return false;
     }
@@ -327,23 +361,6 @@ public class EventListener implements View.OnKeyListener, View.OnClickListener, 
             case KeyEvent.KEYCODE_DPAD_DOWN:
                 mHandler.onDown();
                 break;
-            }
-        }
-        return true;
-    }
-
-    private boolean acceptableKey(String text) {
-        if(text.length() == 1) {
-            // Disable ABCDEF in DEC/BIN and 23456789 in BIN
-            if(mHandler.getMode().equals(Mode.DECIMAL)) {
-                for(String s : bannedInDecimal) {
-                    if(s.equals(text)) return false;
-                }
-            }
-            if(mHandler.getMode().equals(Mode.BINARY)) {
-                for(String s : bannedInBinary) {
-                    if(s.equals(text)) return false;
-                }
             }
         }
         return true;
